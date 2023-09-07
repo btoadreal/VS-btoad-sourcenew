@@ -1,0 +1,3 @@
+[submodule "mods/btoad-fnf"]
+	path = mods/btoad-fnf
+	url = https://github.com/btoadreal/btoad-fnf.git
