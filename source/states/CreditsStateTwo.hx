@@ -7,19 +7,31 @@ import haxe.ds.IntMap;
 import flixel.FlxObject;
 import objects.CreditsTextBox;
 
+typedef CreditsData = {
+    var category:String;
+    var users:Array<CreditsUser>;
+}
+
+typedef CreditsUser = {
+    var name:String;
+    var icon:String;
+    var description:String;
+    var color:String;
+    var url:String;
+}
+
 class CreditsStateTwo extends MusicBeatState
 {
     var curSelected:Int = 0;
-    // var curSequence:Int = 0;
+    var curSequence(get, never):String;
 
     var cooldownTimer:Float = 0.3; // Since the state was just switched we don't want the player to immediately spam and stuff.
     var spamChain:Float = 0;
 
     var sequences:IntMap<String> = new IntMap<String>();
 
-    function getCategory(id:Int):String
-    {
-        return sequences.get(id);
+    @:noCompletion function get_curSequence():String {
+        return sequences.get(curSelected);
     }
 
     var camIcons:FlxCamera;
@@ -60,7 +72,8 @@ class CreditsStateTwo extends MusicBeatState
         textBox.roleColor = FlxColor.BLACK;
         add(textBox);
 
-        pushModCreditsToList('btoad-fnf');
+        for (mod in Mods.parseList().enabled) pushModCreditsToList(mod);
+        // pushModCreditsToList('btoad-fnf');
         updateIconAlignment();
 
         leftArrow = new FlxSprite(15, 230);
@@ -101,14 +114,16 @@ class CreditsStateTwo extends MusicBeatState
             icon.setPosition(FlxG.width/2 + (i - 7/2) * 160, 230 - Math.abs(i%2-1) * 60);
     }
 
+    var bgColorTwn:FlxTween;
+
     function changeSelection(by:Int=0)
     {
         doIconAnim(iconArray[curSelected]);
-        curSelected = (curSelected + by + iconArray.length) % iconArray.length;
+        curSelected = flixel.math.FlxMath.wrap(curSelected+by, 0, iconArray.length-1);
 
         var curIcon:FlxSprite = iconArray[curSelected];
         doIconAnim(curIcon, 1, 1.3);
-        
+
         camIconFollow.x = 0;
         if (curSelected > iconArray.length - 5)
             camIconFollow.x = iconArray[iconArray.length-1].x + 80 - 1150;
@@ -126,17 +141,18 @@ class CreditsStateTwo extends MusicBeatState
 
         textBox.updateText(iconArray[curSelected].name, "coeder");
 
-        var curCategory:String = getCategory(curSelected);
-        if (curCategory != null && curCategory != categoryText.text)
+        if (curSequence != null && curSequence != categoryText.text)
         {
-            categoryText.text = curCategory;
-
+            categoryText.text = curSequence;
             FlxTween.cancelTweensOf(categoryText);
             categoryText.y = 25;
             categoryText.alpha = 0;
             FlxTween.tween(categoryText, {y: 30, alpha: 1}, 0.4, {ease: FlxEase.quadInOut});
         }
 
+        if (bgColorTwn != null) bgColorTwn.cancel();
+
+        bgColorTwn = FlxTween.color(bg, 0.8, bg.color, iconArray[curSelected].pageColor, {ease: FlxEase.sineIn});
 
         leftArrow.visible = (curSelected != 0);
         rightArrow.visible = (curSelected != iconArray.length-1);
@@ -144,38 +160,37 @@ class CreditsStateTwo extends MusicBeatState
         cooldownTimer = 0;
     }
 
-    function pushModCreditsToList(folder:String)
+    function pushModCreditsToList(?folder:String)
     {
+        var parsedData:Array<CreditsData> = [null];
+
         var creditsFile:String = "";
         if(folder != null && folder.trim().length > 0)
-            creditsFile = Paths.mods(folder + '/data/credits.txt');
+            creditsFile = Paths.mods('${folder}/data/credits.json');
         else
-            creditsFile = Paths.mods('data/credits.txt');
+            creditsFile = Paths.mods('data/credits.json');
 
         if (FileSystem.exists(creditsFile))
         {
-            var textFile:Array<String> = File.getContent(creditsFile).split('\n');
+            parsedData = haxe.Json.parse(File.getContent(creditsFile)).credits;
             var prevSequence:String = null;
 
-            for(i => line in textFile)
+            for (data in parsedData)
             {
-                var arr:Array<String> = line.replace('\\n', '\n').split("::");
+                sequences.set(iconArray.length-1, data.category);
+                if (prevSequence != null)
+                    sequences.set(iconArray.length-1, prevSequence);
 
-                if (arr.length == 1) // This is a simple check to see if its a new team or shit
-                {
-                    sequences.set(iconArray.length, arr[0]);
-                    if (prevSequence != null)
-                        sequences.set(iconArray.length-1, prevSequence);
-                    prevSequence = arr[0];
-                    continue;
+                for (user in data.users) {
+                    var icon:CreditsIcon = new CreditsIcon(user.name, user.icon, user.description, user.url, FlxColor.fromString(user.color));
+                    icon.camera = camIcons;
+                    iconArray.push(icon);
+                    add(icon);
                 }
 
-                var icon:CreditsIcon = new CreditsIcon(arr[0], arr[1], arr[2], arr[3], FlxColor.fromString(arr[4]));
-                icon.cameras = [camIcons];
-
-                iconArray.push(icon);
-                add(icon);
+                prevSequence = data.category;
             }
+
             sequences.set(iconArray.length-1, prevSequence);
         }
     }
@@ -184,22 +199,14 @@ class CreditsStateTwo extends MusicBeatState
     {
         cooldownTimer += elapsed;
 
-        if (controls.UI_LEFT_P)
+        if (controls.UI_LEFT_P || controls.UI_RIGHT_P)
         {
-            changeSelection(-1);
-            leftArrow.animation.play('press');
-        }
-        if (controls.UI_RIGHT_P)
-        {
-            changeSelection(1);
-            rightArrow.animation.play('press');
+            changeSelection(controls.UI_RIGHT_P ? 1 : -1);
+            (controls.UI_RIGHT_P ? rightArrow : leftArrow).animation.play('press');
         }
 
-        if (controls.UI_LEFT_R)
-			leftArrow.animation.play('idle');
-        
-		if (controls.UI_RIGHT_R)
-			rightArrow.animation.play('idle');
+        if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
+			(controls.UI_RIGHT_R ? rightArrow : leftArrow).animation.play('idle');
 
         if (controls.BACK)
             #if FREEPLAY
