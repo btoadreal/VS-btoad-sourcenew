@@ -177,9 +177,11 @@ class CreditsStateTwo extends MusicBeatState
 
             for (data in parsedData)
             {
-                sequences.set(iconArray.length-1, data.category);
-                if (prevSequence != null)
-                    sequences.set(iconArray.length-1, prevSequence);
+                if (!sequences.exists(iconArray.length-1)) {
+                    sequences.set(iconArray.length-1, data.category);
+                    if (prevSequence != null)
+                        sequences.set(iconArray.length-1, prevSequence);
+                }
 
                 for (user in data.users) {
                     var icon:CreditsIcon = new CreditsIcon(user.name, user.icon, user.description, user.url, FlxColor.fromString(user.color));
