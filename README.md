@@ -1,3 +1,5 @@
+WARNING!! Most of the mod is done in mods folder, if the mods folder is broken for you then download the latest build on GAMEBANANA and put the mods folder in example mods. This should fix any problems.
+
 # Friday Night Funkin' - Psych Engine
 Engine originally used on [Mind Games Mod](https://gamebanana.com/mods/301107), intended to be a fix for the vanilla version's many issues while keeping the casual play aspect of it. Also aiming to be an easier alternative to newbie coders.
 
