@@ -1,5 +1,6 @@
 package substates;
 
+import states.MainMenuState;
 import backend.WeekData;
 import backend.Highscore;
 import backend.Song;
@@ -301,7 +302,7 @@ class PauseSubState extends MusicBeatSubstate
 
 					Mods.loadTopMod();
 					if(PlayState.isStoryMode) {
-						MusicBeatState.switchState(new StoryMenuState());
+						MusicBeatState.switchState(new MainMenuState());
 					} else {
 						MusicBeatState.switchState(new FreeplayState());
 					}

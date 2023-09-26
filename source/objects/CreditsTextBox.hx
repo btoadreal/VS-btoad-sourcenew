@@ -5,7 +5,8 @@ import flixel.group.FlxSpriteGroup;
 
 class CreditsTextBox extends FlxSpriteGroup
 {
-    public var isVisible:Bool = false;
+    public var links:FlxTypedSpriteGroup<SocialMediaIcon>;
+    public var isVisible(default, null):Bool = false;
 
     var defaultY:Float;
 
@@ -13,6 +14,7 @@ class CreditsTextBox extends FlxSpriteGroup
 
     var name:FlxText;
     var role:FlxText;
+    var description:FlxText;
 
     var tween:FlxTweenManager;
 
@@ -25,14 +27,13 @@ class CreditsTextBox extends FlxSpriteGroup
         return roleColor = color;
     }
 
-    public function updateText(nameText:String, roleText:String):Void
+    public function updateText(nameText:String, roleText:String, descriptionText:String):Void
     {
-        if (!isVisible || name == null || role == null)
-        {
+        if (!isVisible || name == null || role == null || descriptionText == null)
             return;
-        }
 
         name.text = nameText;
+        description.text = descriptionText;
 
         role.text = roleText;
         role.x = name.x + name.fieldWidth + 5;
@@ -52,6 +53,13 @@ class CreditsTextBox extends FlxSpriteGroup
         role = new FlxText(name.x + name.fieldWidth + 5, name.y + name.size - 25, 0, "coder", 25);
         roleColor = FlxColor.RED;
 
+        description = new FlxText(name.x, name.y + 70, 980, "look who's looking thru source code!", 27);
+        description.color = FlxColor.WHITE;
+
+        links = new FlxTypedSpriteGroup<SocialMediaIcon>(box.width - 126, 20);
+        links.group.active = false;
+        links.active = false;
+
         super(FlxG.width / 2 - (box.width / 2), defaultY);
 
         group.alive = false;
@@ -60,24 +68,45 @@ class CreditsTextBox extends FlxSpriteGroup
         add(box);
         add(name);
         add(role);
+        add(description);
+        add(links);
     }
 
     public function tweenText():FlxTween
     {
-        if (!isVisible) return null;
+        if (!isVisible)
+            return null;
 
-        name.alpha = 0;
-        name.visible = true;
+        name.alpha = role.alpha = 0;
+        name.visible = role.visible = true;
+
         name.y = defaultY + 20;
-
-        role.alpha = 0;
-        role.visible = true;
 
         return tween.tween(name, {alpha:1, y: defaultY + 25}, 0.23, {
             ease: FlxEase.quadInOut,
             onUpdate: (twn:FlxTween) -> {
                 role.y = name.y + name.size - 25;
                 role.alpha = name.alpha;
+            },
+            startDelay: 0.02
+        });
+    }
+
+    public function tweenIcons():FlxTween
+    {
+        if (!isVisible)
+            return null;
+
+        links.alpha = description.alpha = 0;
+        links.visible = description.visible = true;
+
+        links.y = defaultY + 15;
+
+        return tween.tween(links, {alpha:1, y: defaultY + 20}, 0.23, {
+            ease: FlxEase.quadInOut,
+            onUpdate: (twn:FlxTween) -> {
+                description.y = links.y + 70;
+                description.alpha = links.alpha;
             },
             startDelay: 0.02
         });
@@ -90,16 +119,13 @@ class CreditsTextBox extends FlxSpriteGroup
         if (tween != null)
             tween.clear();
 
+        box.alpha = name.alpha = role.alpha = 0;
         box.visible = true;
-        box.alpha = 0;
         box.y = defaultY - 5;
-
-        name.alpha = 0;
-        role.alpha = 0;
 
         tween.tween(box, {y: defaultY, alpha: 0.5}, 0.3, {
             ease: FlxEase.quadInOut,
-        }).then(tweenText());
+        }).then(tweenText()).then(tweenIcons());
     }
 
     public function hide():Void
@@ -111,24 +137,50 @@ class CreditsTextBox extends FlxSpriteGroup
             tween.clear();
 
         tween.tween(box, {y: defaultY - 5, alpha: 0}, 0.3, {
-            ease: FlxEase.quadInOut
+            ease: FlxEase.quadInOut,
         });
         tween.tween(name, {alpha:0, y: defaultY - 20}, 0.3, {
             ease: FlxEase.quadInOut,
             onUpdate: (twn:FlxTween) -> {
                 role.y = name.y + name.size - 25;
-                role.alpha = name.alpha;
+                links.y = name.y + 5;
+                description.y = name.y + 70;
+
+                role.alpha = description.alpha = links.alpha = name.alpha;
             },
             onComplete: (twn:FlxTween) -> {
-                box.visible = false;
-                name.visible = false;
-                role.visible = false;
+                box.visible = name.visible = role.visible = links.visible = description.visible = false;
             }
         });
+    }
+
+    public function reloadIcons(iconLinks:Array<String>)
+    {
+        if (!isVisible)
+            return;
+
+        links.group.kill();
+    
+        for (i => link in iconLinks)
+        {
+            var curLink:SocialMediaIcon = addLink(link);
+
+            curLink.setPosition(links.x + i%2 * 58, links.y + Math.floor(i/2)*58);
+            if (i == iconLinks.length-1 && (iconLinks.length-1)%2 == 0)
+                curLink.x += 58;
+        }
+    }
+
+    function addLink(link:String):SocialMediaIcon {
+        var icon:SocialMediaIcon = links.recycle(SocialMediaIcon);
+        icon.setup(link);
+        links.add(icon);
+        return icon;
     }
 
     override function update(elapsed:Float)
     {
         tween.update(elapsed);
+        links.group.update(elapsed);
     }
 }

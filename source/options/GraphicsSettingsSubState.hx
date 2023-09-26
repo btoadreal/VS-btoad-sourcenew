@@ -58,6 +58,12 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		option.onChange = onChangeFramerate;
 		#end
 
+		var option:Option = new Option("Cache Death Animation",
+			"Do you want to pre-load a character's death animation?\nTurning this off is memory efficient.",
+			"cacheDeath",
+			"bool");
+		addOption(option);
+
 		super();
 		insert(1, boyfriend);
 	}

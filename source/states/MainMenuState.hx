@@ -1,5 +1,7 @@
 package states;
 
+import objects.AttachedSprite;
+import backend.Song;
 import backend.WeekData;
 import backend.Achievements;
 
@@ -17,6 +19,7 @@ import options.OptionsState;
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.7.1h'; //This is also used for Discord RPC
+	public static var btoadVersion:String = '1.0';
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -34,6 +37,8 @@ class MainMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
+
+	var freeplayObj:FlxSprite;
 
 	override function create()
 	{
@@ -113,6 +118,33 @@ class MainMenuState extends MusicBeatState
 			FlxTween.tween(menuItem, {x: 50}, 0.4, {startDelay: 0.5 + (i * 0.15), ease: FlxEase.backOut});
 		}
 
+		// Quick and dirty freeplay unlock code since we're so close to finishing 💀
+		if (!StoryMenuState.weekCompleted.get("story1Btoad"))
+		{
+			freeplayObj = menuItems.members[1]; // Freeplay
+			freeplayObj.alpha = 0.5;
+
+			var lock:AttachedSprite = new AttachedSprite('campaign_menu_UI_assets', 'lock');
+			lock.sprTracker = freeplayObj;
+			lock.copyAlpha = false;
+			lock.xAdd = -lock.width - 40;
+			lock.scrollFactor.set(0, itemScroll);
+			lock.updateHitbox();
+
+			FlxTween.cancelTweensOf(freeplayObj);
+			FlxTween.tween(freeplayObj, {x: 90 + lock.width}, 0.4, {startDelay: 0.65, ease: FlxEase.backOut});
+
+			menuOptions.remove("Freeplay");
+			menuItems.remove(freeplayObj, true);
+			add(freeplayObj);
+			add(lock);
+
+			for (i in 1...menuItems.length)
+			{
+				menuItems.members[i].ID--;
+			}
+		}
+
 		FlxG.camera.follow(camFollow, null, 0);
 
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, 'Psych Engine v$psychEngineVersion', 12);
@@ -127,6 +159,7 @@ class MainMenuState extends MusicBeatState
 		changeItem();
 
 		#if ACHIEVEMENTS_ALLOWED
+		WeekData.reloadWeekFiles(true);
 		Achievements.load();
 		var leDate = Date.now();
 		if (leDate.getDay() == 5 && leDate.getHours() >= 18 && !Achievements.isUnlocked('friday_night_play')) {
@@ -191,6 +224,11 @@ class MainMenuState extends MusicBeatState
 
 					if(ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
+					if (freeplayObj != null)
+					{
+						FlxTween.tween(freeplayObj, {alpha:0}, 0.4, {ease: FlxEase.sineOut, onComplete: (twn:FlxTween) -> {freeplayObj.kill();}});
+					}
+
 					menuItems.forEach(function(spr:FlxSprite)
 					{
 						if (curSelected != spr.ID)
@@ -210,13 +248,29 @@ class MainMenuState extends MusicBeatState
 								switch (menuOptions[curSelected])
 								{
 									case 'StoryMode':
-										MusicBeatState.switchState(new StoryMenuState());
+										// commenting this cuz i dont want it to go to waste 😔
+										// var curWeek:WeekData = WeekData.weeksLoaded.get("story1Btoad");
+										// PlayState.storyPlaylist = [for (song in curWeek.songs) song[0]];
+										// var firstSong:String = PlayState.storyPlaylist[0].toLowerCase();
+
+										// PlayState.isStoryMode = true;
+
+										// WeekData.setDirectoryFromWeek(curWeek);
+										// PlayState.storyWeek = WeekData.weeksList.indexOf(curWeek.fileName);
+										// Difficulty.loadFromWeek(curWeek);
+										// PlayState.storyDifficulty = 0; // HARD difficulty
+							
+										// PlayState.SONG = Song.loadFromJson('$firstSong-hard', firstSong);
+										// PlayState.campaignScore = 0;
+										// PlayState.campaignMisses = 0;
+
+										LoadingState.loadAndSwitchState(new StoryMenuState());
 									case 'Freeplay':
 										MusicBeatState.switchState(new FreeplayCategoryState());
 									case 'Awards':
 										MusicBeatState.switchState(new AchievementState());
 									case 'Credits':
-										MusicBeatState.switchState(new CreditsState());
+										MusicBeatState.switchState(new CreditsStateTwo());
 									case 'Options':
 										LoadingState.loadAndSwitchState(new OptionsState());
 										OptionsState.onPlayState = false;

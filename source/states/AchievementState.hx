@@ -26,7 +26,10 @@ class AchievementState extends MusicBeatState
 		var uiTex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
 
 		for (achieve in Achievements.list)
-			Paths.image('achievements/${achieve.saveName}');
+		{
+			if (Achievements.isUnlocked(achieve.name))
+				Paths.image('achievements/${achieve.saveName}');
+		}
 		Paths.image('achievements/lockedachievement');
 
 		menuBG = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
@@ -130,6 +133,9 @@ class AchievementState extends MusicBeatState
 			arrowDn.animation.play('press');
 		else
 			arrowDn.animation.play('idle');
+
+		if (controls.BACK)
+			MusicBeatState.switchState(new MainMenuState());
 
 		super.update(elapsed);
 	}

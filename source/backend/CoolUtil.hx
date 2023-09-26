@@ -114,6 +114,19 @@ class CoolUtil
 		#end
 	}
 
+	public static function getDomainName(url:String):String {
+        var parts:Array<String> = url.split("/");
+        if (parts.length >= 3) {
+            var domainParts:Array<String> = parts[2].split(".");
+            var domainLength:Int = domainParts.length;
+            
+            if (domainLength >= 2) {
+                return domainParts[domainLength - 2];
+            }
+        }
+        return 'missing';
+    }
+
 	/** Quick Function to Fix Save Files for Flixel 5
 		if you are making a mod, you are gonna wanna change "ShadowMario" to something else
 		so Base Psych saves won't conflict with yours

@@ -29,6 +29,7 @@ function onCreate()
     makeLuaSprite('mushroomFG2', 'btoadBGSunset/foreground_mushroom_2', 1450, 600);
     setScrollFactor('mushroomFG2', 1.1, 1.1);
     scaleObject('mushroomFG2', 0.9, 0.9);
+
     -- Add Lua Sprites
     -- Behind Characters
     addLuaSprite('sky');
@@ -39,28 +40,62 @@ function onCreate()
     addLuaSprite('foreground', true);
     addLuaSprite('mushroomFG1', true);
     addLuaSprite('mushroomFG2', true);
+end
 
-    -- Performance
+local tweenObjs = {"foreground", "mushroomFG1", "mushroomFG2"}; -- Easier to manage
+
+function onStepHit()
+    if curStep == 1952 then
+        setProperty('sky.visible', false);
+        setProperty('background.visible', false);
+        setProperty('back.visible', false);
+        setProperty('floor.visible', false);
+        setProperty('foreground.visible', false);
+        setProperty('mushroomFG1.visible', false);
+        setProperty('mushroomFG2.visible', false)
+    elseif curStep == 2224 then
+        doTweenAlpha('epicTween1', 'gf', -1, 6, 'linear')
+        doTweenAlpha('epicTween2', 'boyfriend', -1, 6, 'linear')
+        doTweenAlpha('epicTween3', 'dad', -1, 6, 'linear')
+    elseif curStep == 2246 then
+        doTweenAlpha('epicTween4', 'camHUD', -1, 6, 'linear')
+    end
+end
+
+function onEvent(n, v1)
+    if n == "badapplelol" then
+        if (v1 == 'a') then
+            for obj=1, #tweenObjs do
+                local objName = tweenObjs[obj];
+                doTweenAlpha(objName.."alphatween", objName, 0, 0.37, 'circInOut');
+            end
+        elseif (v1 == 'b') then
+            for obj=1, #tweenObjs do
+                local objName = tweenObjs[obj];
+                doTweenAlpha(objName.."alphatween", objName, 1, 0.37, 'circInOut');
+            end
+        end
+    end
 end
 
 function onCreatePost()
-    if not getPropertyFromClass("backend.ClientPrefs", "data.shaders") then
-      return close();
+    if getPropertyFromClass("backend.ClientPrefs", "data.shaders") then
+        addHaxeLibrary("ShaderFilter", "openfl.filters");
+
+        makeLuaSprite("die2");
+
+        initLuaShader("bloom", 140);
+        setSpriteShader("die2", "bloom");
+
+        runHaxeCode([[
+            game.camHUD.setFilters([new ShaderFilter(game.getLuaObject("die2").shader)]);
+            game.camGame.setFilters([new ShaderFilter(game.getLuaObject("die2").shader)]);
+        ]]);
     end
-
-    makeLuaSprite("die2");
-    makeGraphic("die2", screenWidth, screenHeight, "000000");
-
-    initLuaShader("bloom", 140);
-    setSpriteShader("die2", "bloom");
-
-    addHaxeLibrary("ShaderFilter", "openfl.filters");
-    runHaxeCode([[
-      game.camHUD.setFilters([new ShaderFilter(game.getLuaObject("die2").shader)]);
-      game.camGame.setFilters([new ShaderFilter(game.getLuaObject("die2").shader)]);
-    ]]);
 end
 
+--[[
+too much traces could slow down game for some devices  
 function onUpdatePost()
   setShaderFloat("die2", "iTime", os.clock());
-end
+end--]]

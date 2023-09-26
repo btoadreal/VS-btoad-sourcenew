@@ -45,7 +45,10 @@ class FreeplayCategoryState extends MusicBeatState
         if (controls.ACCEPT)
             categorySelected();
         if (controls.BACK)
+        {
+            FlxG.sound.play(Paths.sound('cancelMenu'), 0.4);
             MusicBeatState.switchState(new MainMenuState());
+        }
 
         super.update(elapsed);
     }

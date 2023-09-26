@@ -75,6 +75,8 @@ class SaveVariables {
 	public var safeFrames:Float = 10;
 	public var discordRPC:Bool = true;
 
+	public var cacheDeath:Bool = false;
+
 	public function new()
 	{
 		//Why does haxe needs this again?

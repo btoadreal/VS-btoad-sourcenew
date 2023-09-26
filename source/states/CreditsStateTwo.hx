@@ -1,28 +1,40 @@
 package states;
 
-import sys.io.File;
-import sys.FileSystem;
-import objects.CreditsIcon;
-import haxe.ds.IntMap;
 import flixel.FlxObject;
+import haxe.Json;
+import haxe.ds.IntMap;
+import sys.FileSystem;
+import sys.io.File;
+import objects.CreditsIcon;
 import objects.CreditsTextBox;
 
-typedef CreditsData = {
-    var category:String;
-    var users:Array<CreditsUser>;
+typedef IconData = {
+    var name:String;
+    var image:String;
+    var role:String;
+    var description:String;
+    var links:Array<String>;
+    var mainLink:Int;
+    var color:String;
 }
 
-typedef CreditsUser = {
-    var name:String;
-    var icon:String;
-    var description:String;
-    var color:String;
-    var url:String;
+typedef CreditsFile = {
+    var categoryOrder:Array<String>;
+    var categoryData:Array<Array<IconData>>;
 }
 
 class CreditsStateTwo extends MusicBeatState
 {
-    var curSelected:Int = 0;
+    var curIcon:CreditsIcon;
+
+    var curSelected(default, set):Int = 0;
+    function set_curSelected(val:Int)
+    {
+        if (iconArray.length > 0)
+            curIcon = iconArray[val];
+        return curSelected = val;
+    }
+
     var curSequence(get, never):String;
 
     var cooldownTimer:Float = 0.3; // Since the state was just switched we don't want the player to immediately spam and stuff.
@@ -51,6 +63,12 @@ class CreditsStateTwo extends MusicBeatState
             FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
         }
 
+        for (file in FileSystem.readDirectory(Paths.getPath("images/credits/social_media")))
+        {
+            if (file.endsWith(".png"))
+                Paths.image('credits/social_media/${file.replace(".png", "")}'); // Precaching social media icons.
+        }
+
         camIconFollow = new FlxObject();
         add(camIconFollow);
 
@@ -72,9 +90,7 @@ class CreditsStateTwo extends MusicBeatState
         textBox.roleColor = FlxColor.BLACK;
         add(textBox);
 
-        for (mod in Mods.parseList().enabled) pushModCreditsToList(mod);
-        // pushModCreditsToList('btoad-fnf');
-        updateIconAlignment();
+        loadCredits();
 
         leftArrow = new FlxSprite(15, 230);
         leftArrow.frames = Paths.getSparrowAtlas("campaign_menu_UI_assets");
@@ -97,31 +113,29 @@ class CreditsStateTwo extends MusicBeatState
 
         changeSelection();
         super.create();
+
+        FlxG.mouse.visible = true;
     }
 
     function doIconAnim(spr:FlxSprite, alpha:Float = 0.5, scale:Float = 1)
     {
-        if (spr.alpha == alpha && spr.scale.x == scale)
+        if ((spr == null) || (spr.alpha == alpha && spr.scale.x == scale))
             return;
 
         FlxTween.cancelTweensOf(spr);
         FlxTween.tween(spr, {alpha:alpha, "scale.x": scale, "scale.y": scale}, 0.25, {ease:FlxEase.quadInOut});
     }
 
-    function updateIconAlignment():Void
-    {
-        for (i => icon in iconArray)
-            icon.setPosition(FlxG.width/2 + (i - 7/2) * 160, 230 - Math.abs(i%2-1) * 60);
-    }
-
     var bgColorTwn:FlxTween;
+    var prevColor:FlxColor;
 
     function changeSelection(by:Int=0)
     {
-        doIconAnim(iconArray[curSelected]);
-        curSelected = flixel.math.FlxMath.wrap(curSelected+by, 0, iconArray.length-1);
+        FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
-        var curIcon:FlxSprite = iconArray[curSelected];
+        doIconAnim(curIcon);
+        curSelected = FlxMath.wrap(curSelected+by, 0, iconArray.length-1);
+
         doIconAnim(curIcon, 1, 1.3);
 
         camIconFollow.x = 0;
@@ -135,11 +149,15 @@ class CreditsStateTwo extends MusicBeatState
         if (spamChain > 1)
             textBox.hide();
         else if (spamChain == 1)
+        {
             textBox.tweenText();
+            textBox.tweenIcons();
+        }
         else
             textBox.show();
 
-        textBox.updateText(iconArray[curSelected].name, "coeder");
+        textBox.updateText(curIcon.name, curIcon.role, curIcon.description);
+        textBox.reloadIcons(curIcon.links);
 
         if (curSequence != null && curSequence != categoryText.text)
         {
@@ -150,9 +168,20 @@ class CreditsStateTwo extends MusicBeatState
             FlxTween.tween(categoryText, {y: 30, alpha: 1}, 0.4, {ease: FlxEase.quadInOut});
         }
 
-        if (bgColorTwn != null) bgColorTwn.cancel();
+        if (curIcon.pageColor != prevColor)
+        {
+            if (bgColorTwn != null) 
+                bgColorTwn.cancel();
 
-        bgColorTwn = FlxTween.color(bg, 0.8, bg.color, iconArray[curSelected].pageColor, {ease: FlxEase.sineIn});
+            bgColorTwn = FlxTween.color(bg, 0.5, bg.color, curIcon.pageColor, {
+                ease: FlxEase.quadInOut,
+                onComplete: (twn:FlxTween) -> {
+                    bgColorTwn = null;
+                }
+            });
+
+            prevColor = curIcon.pageColor;
+        }
 
         leftArrow.visible = (curSelected != 0);
         rightArrow.visible = (curSelected != iconArray.length-1);
@@ -160,43 +189,40 @@ class CreditsStateTwo extends MusicBeatState
         cooldownTimer = 0;
     }
 
-    function pushModCreditsToList(?folder:String)
+    function loadCredits():Void
     {
-        var parsedData:Array<CreditsData> = [null];
-
-        var creditsFile:String = "";
-        if(folder != null && folder.trim().length > 0)
-            creditsFile = Paths.mods('${folder}/data/credits.json');
-        else
-            creditsFile = Paths.mods('data/credits.json');
+        var creditsFile:String = Paths.json('credits');
 
         if (FileSystem.exists(creditsFile))
         {
-            parsedData = haxe.Json.parse(File.getContent(creditsFile)).credits;
+            var json:CreditsFile = cast Json.parse(File.getContent(creditsFile));
             var prevSequence:String = null;
 
-            for (data in parsedData)
+            for(i => categoryName in json.categoryOrder)
             {
-                if (!sequences.exists(iconArray.length-1)) {
-                    sequences.set(iconArray.length-1, data.category);
-                    if (prevSequence != null)
-                        sequences.set(iconArray.length-1, prevSequence);
-                }
+                var curCategory:Array<IconData> = json.categoryData[i];
+                sequences.set(iconArray.length, categoryName);
 
-                for (user in data.users) {
-                    var icon:CreditsIcon = new CreditsIcon(user.name, user.icon, user.description, user.url, FlxColor.fromString(user.color));
-                    icon.camera = camIcons;
+                if (prevSequence != null)
+                    sequences.set(iconArray.length-1, prevSequence);
+                prevSequence = categoryName;
+
+                for (icon in curCategory)
+                {
+                    var icon:CreditsIcon = new CreditsIcon(icon.name, icon.image, icon.role, icon.description, icon.links, icon.mainLink, FlxColor.fromString(icon.color));
+                    icon.cameras = [camIcons];
+                    icon.setPosition(FlxG.width/2 + (iconArray.length - 7/2) * 160, 230 - Math.abs(iconArray.length%2-1) * 60);
+
                     iconArray.push(icon);
                     add(icon);
                 }
-
-                prevSequence = data.category;
             }
 
             sequences.set(iconArray.length-1, prevSequence);
         }
     }
 
+    var holdTime:Float = 0;
     override function update(elapsed:Float)
     {
         cooldownTimer += elapsed;
@@ -205,17 +231,34 @@ class CreditsStateTwo extends MusicBeatState
         {
             changeSelection(controls.UI_RIGHT_P ? 1 : -1);
             (controls.UI_RIGHT_P ? rightArrow : leftArrow).animation.play('press');
+            holdTime = 0;
+        }
+
+        if(controls.UI_LEFT || controls.UI_RIGHT)
+        {
+            var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+            holdTime += elapsed;
+            var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+
+            if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+                changeSelection((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -1 : 1));
         }
 
         if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
 			(controls.UI_RIGHT_R ? rightArrow : leftArrow).animation.play('idle');
 
         if (controls.BACK)
+        {
+            FlxG.sound.play(Paths.sound('cancelMenu'), 0.4);
             #if FREEPLAY
             MusicBeatState.switchState(new FreeplayState());
             #else
             MusicBeatState.switchState(new MainMenuState());
             #end
+        }
+
+        if (controls.ACCEPT)
+            CoolUtil.browserLoad(curIcon.getMainLink());
 
         if (cooldownTimer >= 0.2)
         {
@@ -224,7 +267,8 @@ class CreditsStateTwo extends MusicBeatState
             if (!textBox.isVisible && cooldownTimer >= 0.3)
             {
                 textBox.show();
-                textBox.updateText(iconArray[curSelected].name, "coeder");
+                textBox.updateText(curIcon.name, curIcon.role, curIcon.description);
+                textBox.reloadIcons(curIcon.links);
             }
         }
 

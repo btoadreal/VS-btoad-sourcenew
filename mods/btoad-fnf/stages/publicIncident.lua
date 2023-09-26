@@ -1,4 +1,5 @@
 function onCreatePost()
+	setProperty('camHUD.alpha', 0.82)
 	-- people ew
 	makeAnimatedLuaSprite('boof', 'pi/boof', 500, 630);
 	addAnimationByPrefix('boof','oof instance','oof instance',24,true)

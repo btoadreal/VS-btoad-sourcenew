@@ -1,0 +1,399 @@
+{
+    "categoryOrder": [
+	    "VS btoad",
+	    "Special Thanks",
+        "Psych Engine Crew",
+        "Psych Engine Contributors",
+        "Funkin' Crew"
+    ],
+
+    "categoryData": [
+	[
+            {
+                "name": "btoad",
+                "image": "btoad",
+                "role": "director",
+                "description": "Hey, I'm btoad! Thank you for playing this mod, it's been my passion project for FAR too long now. Hope you enjoyed!! also theres no capital B fuckers",
+                "links": ["https://discord.gg/qGvprDME9c", "https://youtube.com/c/btoad", "https://twitter.com/btoad_"],
+                "mainlink": 0,
+                "color": "0xFF7373"
+            },
+            {
+                "name": "Jolly",
+                "image": "jolly",
+                "role": "musician",
+                "description": "Yo wassup I'm Jolly. I made all the remixes and some extra songs too. Also some tiny little art!!! silly goofy :P",
+                "links": ["https://twitter.com/JollyTortilla"],
+                "mainlink": 0,
+                "color": "0x45CBA3"
+            },
+            {
+                "name": "FlipDoesStuff",
+                "image": "flip",
+                "role": "musician",
+                "description": "hi i was commisioned for this mod but then i started to really like it and made another and will make more in the future, PLAY FLIPBOT AND FRIENDS AND 8BYTZ WHEN THEY COME OUT IN 15 YEARS",
+                "links": ["https://twitter.com/FlipDoesStuff", "https://www.youtube.com/@flip-does-stuff"],
+                "mainlink": 0,
+                "color": "0x9C44FF"
+            },
+            {
+                "name": "V4niza",
+                "image": "v4niza",
+                "role": "musician",
+                "description": "listen to cherrybomb album by tyler the creator.",
+                "links": ["https://twitter.com/V4NIZA_"],
+                "mainlink": 0,
+                "color": "0x3E813A"
+            },
+            {
+                "name": "Arievix",
+                "image": "arievix",
+                "role": "guest musician",
+                "description": "Composed Mushroom Mania.",
+                "links": ["https://twitter.com/arievix"],
+                "mainlink": 0,
+                "color": "0x787878"
+            },
+            {
+                "name": "Andro Addy",
+                "image": "addy",
+                "role": "guest musician",
+                "description": "Composed menu music.",
+                "links": ["https://open.spotify.com/artist/6DeZ2Bh30SmXtxFWZhrjnA"],
+                "mainlink": 0,
+                "color": "0x3E813A"
+            },
+            {
+                "name": "Matt$",
+                "image": "matt",
+                "role": "guest musician",
+                "description": "Next Stop, The Future!",
+                "links": ["https://mattmoney.newgrounds.com/"],
+                "mainlink": 0,
+                "color": "0x89DE30"
+            },
+            {
+                "name": "Yunee",
+                "image": "yunee",
+                "role": "guest musician",
+                "description": "Composed Sins.",
+                "links": ["https://twitter.com/DistrustFNF"],
+                "mainlink": 0,
+                "color": "0x210A38"
+            },
+            {
+                "name": "big oof",
+                "image": "isabelle",
+                "role": "Artist",
+                "description": "The Autism Prime shipment is at your door.",
+                "links": ["https://twitter.com/big_oof0"],
+                "mainlink": 0,
+                "color": "0xFFFFFF"
+            },
+            {
+                "name": "JustLeo",
+                "image": "leo",
+                "role": "Artist",
+                "description": "I'm Leo. I'm an artist/animator. I hate peanut brittle.",
+                "links": ["https://twitter.com/LeoIsJustAAAA"],
+                "mainlink": 0,
+                "color": "0x3E813A"
+            },
+            {
+                "name": "NIKOROSE",
+                "image": "niko",
+                "role": "Artist",
+                "description": "i did stuff",
+                "links": ["https://www.youtube.com/"],
+                "mainlink": 0,
+                "color": "0xBC2DE5"
+            },
+            {
+                "name": "Ghost Bunny",
+                "image": "bunny",
+                "role": "Artist",
+                "description": "Hello, I did some menu art and other small art for this mod, hope you all enjoyed it",
+                "links": ["https://twitter.com/GhostBnuuy"],
+                "mainlink": 0,
+                "color": "0xFFFFFF"
+            },
+            {
+                "name": "grunt",
+                "image": "grunt",
+                "role": "Artist",
+                "description": "I WILL PEEL MY SKIN OFF",
+                "links": ["https://twitter.com/madnescobat", "https://www.youtube.com/channel/UCnotf_I8NYQ4eJfO51yZQjQ"],
+                "mainlink": 0,
+                "color": "0x3E813A"
+            },
+            {
+                "name": "UnnamedPerson",
+                "image": "unnamed",
+                "role": "Artist",
+                "description": "Made Phase 1 btoad sprites.",
+                "links": ["https://twitter.com/UnnamedPersonXP"],
+                "mainlink": 0,
+                "color": "0xC4C4C4"
+            },
+            {
+                "name": "Sinnvakr",
+                "image": "sinnvakr",
+                "role": "quote on quote Animator",
+                "description": "its uhh ironic",
+                "links": ["https://twitter.com/sinnvakr, https://discord.gg/XTzvsBwyhc, https://gamebanana.com/members/1910666"],
+                "mainlink": 0,
+                "color": "0xADDEFF"
+            },
+            {
+                "name": "Munchest",
+                "image": "munchest",
+                "role": "Animator",
+                "description": "Animated Phase 1 btoad sprites.",
+                "links": ["https://www.youtube.com/channel/UCtOKOxmOFSx38TjYSKsGbFw"],
+                "mainlink": 0,
+                "color": "0x3E813A"
+            },
+            {
+                "name": "BombasticTom",
+                "image": "tom",
+                "role": "Coder (and the 3rd strumline guy)",
+            "description": "Third Strumline guy? What is that, I don't know what you're talking about!",
+                "links": ["https://linktr.ee/bombastictom", "https://www.youtube.com/@BombasticTom492",
+                          "https://github.com/BombasticTom", "https://gamebanana.com/members/1860184"],
+                "mainlink": 0,
+                "color": "0x3E813A"
+            },
+            {
+                "name": "cyn0x8",
+                "image": "cyn",
+                "role": "Coder/Charter",
+                "description": "Charted various songs, and added NeoCam to Lore.",
+                "links": ["https://twitter.com/cyn0x8"],
+                "mainlink": 0,
+                "color": "0xD090D5"
+            },
+            {
+                "name": "CrowPlexus",
+                "image": "crow",
+                "role": "Coder",
+                "description": "Last minute coding.",
+                "links": ["https://twitter.com/crowplexus"],
+                "mainlink": 0,
+                "color": "0x03FFFF"
+            },
+            {
+                "name": "ThatGuyGZ",
+                "image": "gamerzone",
+                "role": "Charter",
+                "description": "At least I wasn't fired.",
+                "links": ["https://twitter.com/ThatGuyGZ"],
+                "mainlink": 0,
+                "color": "0x3399FF"
+            }
+        ],
+	[
+            {
+                "name": "greggreg",
+                "image": "greg",
+                "role": "Chromatic Scale",
+                "description": "Made the btoad Chromatic scale.",
+                "links": ["https://twitter.com/gregnantmen"],
+                "mainlink": 0,
+                "color": "0xFFFFFF"
+            },
+            {
+                "name": "Cali",
+                "image": "cali",
+                "role": "Guest Artist",
+                "description": "Made unused btoad Crewmate sprites.",
+                "links": ["https://gamebanana.com/members/2421575"],
+                "mainlink": 0,
+                "color": "0x974B54"
+            },
+            {
+                "name": "Skellz",
+                "image": "missing_icon",
+                "role": "Guest Artist",
+                "description": "Made unused background. Could not find their profile.",
+                "links": ["https://gamebanana.com/members/2298643"],
+                "mainlink": 0,
+                "color": "0x3E813A"
+            },
+            {
+                "name": "IMPOSTORM",
+                "image": "v4",
+                "role": "VS Impostor",
+                "description": "Credit for everything Boiling Point-related that we didn't make.",
+                "links": ["https://gamebanana.com/mods/55652"],
+                "mainlink": 0,
+                "color": "0xC70909"
+            },
+            {
+                "name": "kiwiquestt",
+                "image": "kiwi",
+                "role": "Ourple Guy",
+                "description": "Credits for everything Lore-related that we didn't make.",
+                "links": ["https://gamebanana.com/members/2082887"],
+                "mainlink": 0,
+                "color": "0xFCB2C4"
+            }
+        ],
+        [
+            {
+                "name": "Shadow Mario",
+                "image": "shadowmario",
+                "role": "programmer",
+                "description": "Main Programmer of Psych Engine",
+                "links": ["https://twitter.com/Shadow_Mario_"],
+                "mainlink": 0,
+                "color": "0x444444"
+            },
+            {
+                "name": "Riveren",
+                "image": "riveren",
+                "role": "artist",
+                "description": "Main Artist/Animator of Psych Engine",
+                "links": ["https://twitter.com/riverennn"],
+                "mainlink": 0,
+                "color": "0xB42F71"
+            },
+            {
+                "name": "shubs",
+                "image": "shubs",
+                "role": "programmer",
+                "description": "Ex-Programmer of Psych Engine",
+                "links": ["https://twitter.com/yoshubs"],
+                "mainlink": 0,
+                "color": "0x5E99DF"
+            },
+            {
+                "name": "bb-panzu",
+                "image": "bb",
+                "role": "programmer",
+                "description": "Ex-Programmer of Psych Engine",
+                "links": ["https://twitter.com/bbsub3"],
+                "mainlink": 0,
+                "color": "0x3E813A"
+            }
+        ],
+        [
+            {
+                "name": "iFlicky",
+                "image": "flicky",
+                "role": "composer",
+                "description": "Composer of Psync and Tea Time\nMade the Dialogue Sounds",
+                "links": ["https://twitter.com/flicky_i"],
+                "mainlink": 0,
+                "color": "0x9E29CF"
+            },
+            {
+                "name": "SqirraRNG",
+                "image": "sqirra",
+                "role": "programmer",
+                "description": "Crash Handler and Base code for\nChart Editor's Waveform",
+                "links": ["https://twitter.com/gedehari"],
+                "mainlink": 0,
+                "color": "0xE1843A"
+            },
+            {
+                "name": "EliteMasterEric",
+                "image": "mastereric",
+                "role": "programmer",
+                "description": "Runtime Shaders support",
+                "links": ["https://twitter.com/EliteMasterEric"],
+                "mainlink": 0,
+                "color": "0xFFBD40"
+            },
+            {
+                "name": "PolybiusProxy",
+                "image": "proxy",
+                "role": "programmer",
+                "description": ".MP4 Video Loader Library (hxCodec)",
+                "links": ["https://twitter.com/polybiusproxy"],
+                "mainlink": 0,
+                "color": "0xDCD294"
+            },
+            {
+                "name": "KadeDev",
+                "image": "kade",
+                "role": "programmer",
+                "description": "Fixed some cool stuff on Chart Editor\nand other PRs",
+                "links": ["https://twitter.com/kade0912"],
+                "mainlink": 0,
+                "color": "0x64A250"
+            },
+            {
+                "name": "Keoiki",
+                "image": "keoiki",
+                "role": "animator",
+                "description": "Note Splash Animations and Latin Alphabet",
+                "links": ["https://twitter.com/Keoiki_"],
+                "mainlink": 0,
+                "color": "0xD2D2D2"
+            },
+            {
+                "name": "superpowers04",
+                "image": "superpowers04",
+                "role": "programmer",
+                "description": "LUA JIT Fork",
+                "links": [
+                    "https://twitter.com/superpowers04",
+                    "https://github.com/superpowers04",
+                    "https://www.youtube.com/@superpowers0411"
+                ],
+                "mainlink": 0,
+                "color": "0xB957ED"
+            },
+            {
+                "name": "Smokey",
+                "image": "smokey",
+                "role": "programmer",
+                "description": "Sprite Atlas Support",
+                "links": ["https://twitter.com/Smokey_5_"],
+                "mainlink": 0,
+                "color": "0x483D92"
+            }
+        ],
+        [
+            {
+                "name": "ninjamuffin99",
+                "image": "ninjamuffin99",
+                "role": "programmer",
+                "description": "Programmer of Friday Night Funkin'",
+                "links": [
+                    "https://twitter.com/ninja_muffin99",
+                    "https://ninjamuffin99.newgrounds.com/"
+                ],
+                "mainlink": 0,
+                "color": "0xCF2D2D"
+            },
+            {
+                "name": "PhantomArcade",
+                "image": "phantomarcade",
+                "role": "animator",
+                "description": "Animator of Friday Night Funkin'",
+                "links": ["https://twitter.com/PhantomArcade3K"],
+                "mainlink": 0,
+                "color": "0xFADC45"
+            },
+            {
+                "name": "evilsk8r",
+                "image": "evilsk8r",
+                "role": "artist",
+                "description": "Artist of Friday Night Funkin'",
+                "links": ["https://twitter.com/evilsk8r"],
+                "mainlink": 0,
+                "color": "0x5ABD4B"
+            },
+            {
+                "name": "kawaisprite",
+                "image": "kawaisprite",
+                "role": "composer",
+                "description": "Composer of Friday Night Funkin'",
+                "links": ["https://twitter.com/kawaisprite"],
+                "mainlink": 0,
+                "color": "0x378FC7"
+            }
+        ]
+    ]
+}

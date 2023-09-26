@@ -24,7 +24,7 @@ class AchievementPopup extends FlxSpriteGroup {
 		achievementName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
 		achievementName.scrollFactor.set();
 
-		var achievementText:FlxText = new FlxText(achievementName.x, achievementName.y + 32, 280, curAchievement.name, 16);
+		var achievementText:FlxText = new FlxText(achievementName.x, achievementName.y + 32, 280, curAchievement.description, 16);
 		achievementText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
 		achievementText.scrollFactor.set();
 

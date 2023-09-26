@@ -158,13 +158,15 @@ class Mods
 		#if MODS_ALLOWED
 		list.all.push("btoad-fnf");
 		list.enabled.push("btoad-fnf");
-		/*try {
+		try {
 			for (mod in CoolUtil.coolTextFile('modsList.txt'))
 			{
 				//trace('Mod: $mod');
 				if(mod.trim().length < 1) continue;
 
 				var dat = mod.split("|");
+				if (dat[0] == "btoad-fnf") continue;
+				
 				list.all.push(dat[0]);
 				if (dat[1] == "1")
 					list.enabled.push(dat[0]);
@@ -173,7 +175,7 @@ class Mods
 			}
 		} catch(e) {
 			trace(e);
-		}*/
+		}
 		#end
 		return list;
 	}

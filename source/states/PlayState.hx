@@ -621,6 +621,9 @@ class PlayState extends MusicBeatState
 			precacheList.set(Paths.formatToSongPath(ClientPrefs.data.pauseMusic), 'music');
 		}
 
+		if (ClientPrefs.data.cacheDeath)
+			precacheList.set("characters/BOYFRIEND_DEAD", "image");
+
 		precacheList.set('alphabet', 'image');
 		resetRPC();
 
@@ -2296,7 +2299,7 @@ class PlayState extends MusicBeatState
 					if(FlxTransitionableState.skipNextTransIn) {
 						CustomFadeTransition.nextCamera = null;
 					}
-					MusicBeatState.switchState(new StoryMenuState());
+					MusicBeatState.switchState(new MainMenuState());
 
 					// if ()
 					if(!ClientPrefs.getGameplaySetting('practice') && !ClientPrefs.getGameplaySetting('botplay')) {
